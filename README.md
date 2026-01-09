@@ -37,7 +37,7 @@ You are encouraged to use [Pinia](https://pinia.vuejs.org/) as store for posts.
 
 > Please update the following line in this `README.md` file to include your estimate of the time required for completion.
 
-Estimated Time Required: [Your Estimate Here]
+Estimated Time Required: 30 minutes
 
 > After updating the estimate and right before you start coding, commit your changes using the following command:
 `git add README.md && git commit -m "Task 1 estimated" && git push`
@@ -142,4 +142,3 @@ Estimated Time Required: [Your Estimate Here]
 Thank you for completing this challenge. Kindly inform us when you have finished, and we will proceed to review your code. Make sure to add [harlekoy](https://github.com/harlekoy) to the list of collaborators for both your private repositories, including the Laravel API and the Nuxt app.
 
 Best of luck!
-
