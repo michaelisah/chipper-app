@@ -7,10 +7,11 @@ const user = useUser()
 const postsStore = usePosts()
 const favoritesStore = useFavorites()
 
-// Fetch posts and favorite users on page load
+// Fetch posts and favorite users/posts on page load
 await Promise.all([
   postsStore.fetchPosts(),
-  user.isGuest ? null : favoritesStore.fetchFavoriteUsers()
+  user.isGuest ? null : favoritesStore.fetchFavoriteUsers(),
+  user.isGuest ? null : favoritesStore.fetchFavoritePosts()
 ])
 </script>
 

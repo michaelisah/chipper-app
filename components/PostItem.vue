@@ -12,11 +12,17 @@ const props = defineProps({
 
 const favoritesStore = useFavorites()
 const isLoading = ref(false)
+const isPostFavLoading = ref(false)
 const { showErrorModal } = useHelpers()
 
 // Check if the post author is in favorites
 const isFollowing = computed(() => {
   return favoritesStore.isUserFavorite(props.post.user.id)
+})
+
+// Check if the post is in favorites
+const isFavorite = computed(() => {
+  return favoritesStore.isPostFavorite(props.post.id)
 })
 
 // Toggle follow status
@@ -30,6 +36,20 @@ async function toggleFollow() {
     showErrorModal(error, 'Failed to update follow status. Please try again.')
   } finally {
     isLoading.value = false
+  }
+}
+
+// Toggle post favorite status
+async function togglePostFavorite() {
+  if (isPostFavLoading.value) return
+  
+  try {
+    isPostFavLoading.value = true
+    await favoritesStore.togglePostFavorite(props.post.id)
+  } catch (error) {
+    showErrorModal(error, 'Failed to update post favorite status. Please try again.')
+  } finally {
+    isPostFavLoading.value = false
   }
 }
 </script>
@@ -54,11 +74,15 @@ async function toggleFollow() {
     <p>
       {{ post.body }}
     </p>
-    <button class="bg-red-200 text-red-500 flex items-center justify-center gap-2 p-4 rounded-lg">
+    <button 
+      class="flex items-center justify-center gap-2 p-4 rounded-lg"
+      :class="isFavorite ? 'bg-red-500 text-white' : 'bg-red-200 text-red-500'"
+      :disabled="isPostFavLoading"
+      @click="togglePostFavorite">
       <HeartIcon
         class="h-6 stroke-current" />
       <span class="font-bold">
-        Add to my favorites
+        {{ isPostFavLoading ? 'Processing...' : (isFavorite ? 'Remove from favorites' : 'Add to my favorites') }}
       </span>
     </button>
   </div>
