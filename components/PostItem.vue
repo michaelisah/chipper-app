@@ -25,6 +25,11 @@ const isFavorite = computed(() => {
   return favoritesStore.isPostFavorite(props.post.id)
 })
 
+// Check if the post has an image
+const hasImage = computed(() => {
+  return props.post.image_url && props.post.image_url !== ''
+})
+
 // Toggle follow status
 async function toggleFollow() {
   if (isLoading.value) return
@@ -74,6 +79,14 @@ async function togglePostFavorite() {
     <p>
       {{ post.body }}
     </p>
+    
+    <!-- Display post image if available -->
+    <img 
+      v-if="hasImage" 
+      :src="post.image_url" 
+      class="w-full rounded-lg object-cover max-h-96" 
+      alt="Post image" />
+    
     <button 
       class="flex items-center justify-center gap-2 p-4 rounded-lg"
       :class="isFavorite ? 'bg-red-500 text-white' : 'bg-red-200 text-red-500'"

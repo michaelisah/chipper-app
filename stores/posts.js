@@ -55,13 +55,12 @@ export const usePosts = defineStore('posts', () => {
   
   function loadNewPosts() {
     if (newPosts.value.length > 0) {
-      // Add new posts to the beginning of the posts array
-      posts.value = [...newPosts.value, ...posts.value]
-
+      // Combine all posts and sort them by ID in descending order
+      const allPosts = [...newPosts.value, ...posts.value]
+      posts.value = allPosts.sort((a, b) => b.id - a.id)
+      
       // Update the last fetched post ID
-      if (newPosts.value.length > 0) {
-        lastFetchedId.value = newPosts.value[0].id
-      }
+      lastFetchedId.value = posts.value[0].id
       
       // Reset new posts
       newPosts.value = []
@@ -85,6 +84,30 @@ export const usePosts = defineStore('posts', () => {
     }
   }
   
+  async function createPostWithImage(title, body, imageFile) {
+    try {
+      // Create a FormData object to send the post data and image
+      const formData = new FormData()
+      formData.append('title', title)
+      formData.append('body', body)
+      formData.append('image', imageFile)
+      
+      // Use the postFormData method to send the form data
+      const response = await $api.postFormData('posts', formData)
+      
+      // Add the new post to the beginning of the posts array
+      posts.value.unshift(response.data)
+      
+      // Update the last fetched post ID
+      lastFetchedId.value = response.data.id
+      
+      return response.data
+    } catch (error) {
+      console.error('Error creating post with image:', error)
+      throw error
+    }
+  }
+  
   return {
     posts,
     newPosts,
@@ -93,7 +116,8 @@ export const usePosts = defineStore('posts', () => {
     fetchPosts,
     checkForNewPosts,
     loadNewPosts,
-    createPost
+    createPost,
+    createPostWithImage
   }
 })
 
